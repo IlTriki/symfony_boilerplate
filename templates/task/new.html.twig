@@ -1,0 +1,11 @@
+{% extends 'task/base.html.twig' %}
+
+{% block title %}Nouvelle tâche{% endblock %}
+
+{% block task_title %}Créer une nouvelle tâche{% endblock %}
+
+{% block task_content %}
+    <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        {{ include('task/_form.html.twig') }}
+    </div>
+{% endblock %} 

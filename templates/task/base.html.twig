@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ ux_controller_link_tags() }}
+{% endblock %}
+
+{% block body %}
+    <div class="container mx-auto px-4 py-8">
+        <nav class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900 mb-4">{% block task_title %}{% endblock %}</h1>
+            <div class="flex justify-between items-center">
+                <a href="{{ path('task_index') }}" class="text-blue-600 hover:text-blue-800">Retour à la liste</a>
+                {% block task_actions %}{% endblock %}
+            </div>
+        </nav>
+        
+        {% for message in app.flashes('success') %}
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        {% for message in app.flashes('error') %}
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        {% block task_content %}{% endblock %}
+    </div>
+{% endblock %} 

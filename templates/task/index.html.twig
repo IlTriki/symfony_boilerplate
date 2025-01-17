@@ -1,0 +1,57 @@
+{% extends 'task/base.html.twig' %}
+
+{% block title %}Liste des tâches{% endblock %}
+
+{% block task_title %}Liste des tâches{% endblock %}
+
+{% block task_actions %}
+    <a href="{{ path('task_new') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        Créer une nouvelle tâche
+    </a>
+{% endblock %}
+
+{% block task_content %}
+    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Auteur</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Créé le</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                {% for task in tasks %}
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ task.name }}</td>
+                        <td class="px-6 py-4">{{ task.description }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ task.author.email }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ task.createdAt|date('d/m/Y H:i') }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap space-x-2">
+                            {% if is_granted('TASK_VIEW', task) %}
+                                <a href="{{ path('task_show', {'id': task.id}) }}" class="text-blue-600 hover:text-blue-900">Voir</a>
+                            {% endif %}
+                            
+                            {% if is_granted('TASK_EDIT', task) %}
+                                <a href="{{ path('task_edit', {'id': task.id}) }}" class="text-yellow-600 hover:text-yellow-900">Modifier</a>
+                            {% endif %}
+                            
+                            {% if is_granted('TASK_DELETE', task) %}
+                                <form method="post" action="{{ path('task_delete', {'id': task.id}) }}" class="inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette tâche ?');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ task.id) }}">
+                                    <button class="text-red-600 hover:text-red-900">Supprimer</button>
+                                </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="px-6 py-4 text-center text-gray-500">Aucune tâche trouvée</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
